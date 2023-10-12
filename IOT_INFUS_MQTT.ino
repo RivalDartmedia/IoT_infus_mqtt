@@ -78,6 +78,7 @@ void setup(){
 
     //-----------STEP3: Init Connection
     connect1.connectWifi(config1);
+    connect1.setupMqtt();
 
     //-----------STEP4: Config if needed and check wifi connection
     if(connect1.checkwifi()){
@@ -204,12 +205,12 @@ void setup(){
     buzz.buzzbeep(1000);
     displed.print("infus !", 0, 0);
     delay(1000);
-    while(!button.is_push()){
-        displed.print("Infus tak digantung?", 0, 0);
-        if(button.is_push()){
-            break;
-        }
-    }
+//    while(!button.is_push()){
+//        displed.print("Infus tak digantung?", 0, 0);
+//        if(button.is_push()){
+//            break;
+//        }
+//    }
     displed.print("Kalibrasi berat...", 0, 0);
 
     loadconfig.load(LittleFS);
@@ -224,12 +225,12 @@ void setup(){
     //-------------------------------------------------
 
     //Konfirmasi mulai monitoring
-    while(!button.is_push()){
-        displed.print("Infus     berjalan ?", 0, 0);
-        if(button.is_push()){
-            break;
-        }
-    }
+//    while(!button.is_push()){
+//        displed.print("Infus     berjalan ?", 0, 0);
+//        if(button.is_push()){
+//            break;
+//        }
+//    }
     displed.print("Monitoringdimulai",0 ,0);
     buzz.buzzbeep(500);
     delay(500);
@@ -261,13 +262,16 @@ void loop() {
     // connect1.connectWifi(config1);
 
     //-----------STEP-M2: Connection Management & Send Data
+//    displed.print("SEND DATA", 0, 0);
+    delay(2000);
     if(connect1.checkwifi()){
-        if(connect1.update_secure(config1, val_sample_tpm, val_sample_berat) != 200){
-            buzz.buzzbeep(500);
-            delay(2000);
-        } else {
-            delay(2500);
-        }
+//        if(connect1.update_secure(config1, val_sample_tpm, val_sample_berat) != 200){
+//            buzz.buzzbeep(500);
+//            delay(2000);
+//        } else {
+//            delay(2500);
+//        }
+          connect1.update_secure();
     }else{ //Cek bisa sim atau tidak
         displed.print("WiFi tidaktersambung", 0, 0);
         delay(2000);

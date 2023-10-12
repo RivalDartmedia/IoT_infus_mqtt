@@ -1,6 +1,4 @@
 {
     "editor.suggest.snippetsPreventQuickSuggestions": false,
-    "aiXcoder.showTrayIcon": true,
-    "files.associations": {
-    }
+    "aiXcoder.showTrayIcon": true
 }
