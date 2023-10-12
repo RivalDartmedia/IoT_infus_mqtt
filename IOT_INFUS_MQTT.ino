@@ -17,7 +17,7 @@ Weigh weigh;
 LoadCellConfig loadconfig;
 Button button;
 DisplayLed displed;
-buzzer buzz;
+Buzzer buzz;
 Bat bat;
 
 //-----------Inisialisasi pin dan variabel

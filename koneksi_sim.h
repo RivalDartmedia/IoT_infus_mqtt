@@ -1,7 +1,6 @@
 #ifndef koneksi_sim_h
 #define koneksi_sim_h
 
-#include <Arduino.h>
 #include <SoftwareSerial.h>
 #include "SIM800L.h"
 #include <ArduinoJson.h>

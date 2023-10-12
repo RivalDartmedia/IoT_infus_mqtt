@@ -1,7 +1,7 @@
 #ifndef buzzer_h
 #define buzzer_h
 
-class buzzer
+class Buzzer
 {
   private:
 

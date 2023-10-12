@@ -1,11 +1,10 @@
 #ifndef sensorinfus_h
 #define sensorinfus_h
 
-#include <Arduino.h>
 #include <HX711.h>
 #include "buzzer.h"
 
-buzzer buzzbutton;
+Buzzer buzzbutton;
 
 class Tpm
 {

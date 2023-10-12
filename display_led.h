@@ -1,7 +1,6 @@
 #ifndef display_led_h
 #define display_led_h
 
-#include <Arduino.h>
 #include <Adafruit_SSD1306.h>
 #include <Adafruit_GFX.h>
 
