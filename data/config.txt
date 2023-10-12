@@ -1,0 +1,7 @@
+{
+  "tokenID": "LTk2NTgzMjA5NA",
+  "temp_IoT": "Infus_IoT",
+  "infus_name": "Infus_DM1",
+  "wifi_ssid": "ZTE_2.4G_5yzkX4",
+  "wifi_pass": "123456789"
+}
