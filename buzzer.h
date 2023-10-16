@@ -4,15 +4,9 @@
 class Buzzer
 {
   private:
-
     int buzzPin;
-    int buzzState = LOW;
-    unsigned long previousMillis = 0;
-    unsigned long buzzerStartTime;
-    int buzzerStatus = 0;
   
   public:
-  
     void init(int buzzPin)
     {
       this->buzzPin = buzzPin;

@@ -2,9 +2,6 @@
 #define sensorinfus_h
 
 #include <HX711.h>
-#include "buzzer.h"
-
-Buzzer buzzbutton;
 
 class Tpm
 {

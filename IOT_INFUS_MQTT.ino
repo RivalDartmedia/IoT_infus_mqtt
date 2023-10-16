@@ -81,7 +81,8 @@ void setup(){
     connect1.setupMqtt();
 
     //-----------STEP4: Config if needed and check wifi connection
-    if(connect1.checkwifi()){
+    if (connect1.checkwifi())
+    {
         Serial.println("WiFi Connected");
         String wifi = config1.get(wifi_ssid_p);
         Serial.println(wifi);
@@ -89,7 +90,9 @@ void setup(){
         displed.wifiCon(wifi);
         buzz.buzzbeep(500);
         delay(1500);
-    }else{
+    }
+    else
+    {
         Serial.println("Wifi Not Connected");
         displed.print("WiFi tidaktersambung", 0, 0);
         delay(2000);
@@ -99,7 +102,8 @@ void setup(){
         start_portal(config1);
         delay(500);
         connect1.connectWifi(config1);
-        if (connect1.checkwifi()){
+        if (connect1.checkwifi())
+        {
             Serial.println("WiFi Connected");
             String wifi = config1.get(wifi_ssid_p);
             Serial.println(wifi);
@@ -107,7 +111,9 @@ void setup(){
             displed.wifiCon(wifi);
             buzz.buzzbeep(500);
             delay(1500);
-        } else {
+        } 
+        else 
+        {
             Serial.println("Wifi Not Connected");
             displed.print("WiFi tidaktersambung", 0, 0);
             delay(2000);
@@ -124,12 +130,15 @@ void setup(){
     int cnt_config = 5;
     unsigned long previousMillis = 0;
     unsigned long interval = 1000;
-    while(cnt_config > -1 && !button.is_push()){
+    while (cnt_config > -1 && !button.is_push())
+    {
         unsigned long currentMillis = millis();
-        if (currentMillis - previousMillis >= interval) {
+        if (currentMillis - previousMillis >= interval) 
+        {
             previousMillis = currentMillis;
     
-            if (cnt_config > -1) {
+            if (cnt_config > -1) 
+            {
                 Serial.print("Setting WiFi ? ");
                 Serial.println(cnt_config);
                 displed.settingWiFi(cnt_config);
@@ -137,14 +146,16 @@ void setup(){
             }       
         }
     }
-    if (cnt_config > -1){
+    if (cnt_config > -1)
+    {
         Serial.println("Starting Captive Portal...");
         displed.print("Mengatur  WiFi...", 0, 0);
         buzz.buzzbeep(500);
         start_portal(config1);
         delay(500);
         connect1.connectWifi(config1);
-        if (!connect1.checkwifi()){
+        if (!connect1.checkwifi())
+        {
             Serial.println("Wifi Not Connected");
             displed.print("WiFi tidaktersambung", 0, 0);
             delay(2000);
@@ -166,8 +177,16 @@ void setup(){
     buzz.buzzbeep(500);
     delay(500);
     config1.print();
-    // config1.edit(tokenID_p, "2nrtIgwDCHP5SF3CToAWWdWZFPGtz6oX");
-    // config1.save(LittleFS);
+
+    // Connect ke MQTT Broker
+    while (connect1.reconnect() == -2)
+    {
+        displed.print("SERVER    ERROR", 0, 0);
+        buzz.buzzbeep(1000);
+        delay(2000);
+        displed.print("Menyambungke server", 0, 0);
+        delay(2000);
+    }
 
     // Cek update firmware
     displed.print("Cek updatefirmware", 0, 0);
@@ -194,7 +213,8 @@ void setup(){
 
     //-------------Load and Callibr---------------------
     // int weigh_callib_lim = 0, weigh_callib = 10;
-    // while(weigh_callib > weigh_callib_lim){
+    // while(weigh_callib > weigh_callib_lim)
+    // {
     //     Serial.println(weigh_callib);
     //     displed.weighCallib(weigh_callib);
     //     buzz.buzzbeep(500);
@@ -205,12 +225,13 @@ void setup(){
     buzz.buzzbeep(1000);
     displed.print("infus !", 0, 0);
     delay(1000);
-//    while(!button.is_push()){
-//        displed.print("Infus tak digantung?", 0, 0);
-//        if(button.is_push()){
-//            break;
-//        }
-//    }
+    // while(!button.is_push())
+    // {
+    //     displed.print("Infus tak digantung?", 0, 0);
+    //     if(button.is_push()){
+    //         break;
+    //     }
+    // }
     displed.print("Kalibrasi berat...", 0, 0);
 
     loadconfig.load(LittleFS);
@@ -225,12 +246,12 @@ void setup(){
     //-------------------------------------------------
 
     //Konfirmasi mulai monitoring
-//    while(!button.is_push()){
-//        displed.print("Infus     berjalan ?", 0, 0);
-//        if(button.is_push()){
-//            break;
-//        }
-//    }
+    // while(!button.is_push()){
+    //     displed.print("Infus     berjalan ?", 0, 0);
+    //     if(button.is_push()){
+    //         break;
+    //     }
+    // }
     displed.print("Monitoringdimulai",0 ,0);
     buzz.buzzbeep(500);
     delay(500);
@@ -243,13 +264,14 @@ void loop() {
     attachInterrupt(configWiFiButton, pauseMonitoring, FALLING);
     
     //-----------STEP-M1: Get Sensor Data & Displaying
-    int val_sample_berat = weigh.get_unit();
-    // int val_sample_berat = random(0, 750);
+    Serial.println("-----------------------------------");
+    // int val_sample_berat = weigh.get_unit();
+    int val_sample_berat = random(0, 750);
     if (val_sample_berat < 0){
       val_sample_berat = 0;
     }
-    int val_sample_tpm = tpm.get();
-    // int val_sample_tpm = random(0,100);
+    // int val_sample_tpm = tpm.get();
+    int val_sample_tpm = random(0,100);
     Serial.print("TPM: ");
     Serial.println(val_sample_tpm);
     Serial.print("Weigh: ");
@@ -259,49 +281,63 @@ void loop() {
 
     delay(2000);
 
-    // connect1.connectWifi(config1);
-
     //-----------STEP-M2: Connection Management & Send Data
-//    displed.print("SEND DATA", 0, 0);
-    delay(2000);
-    if(connect1.checkwifi()){
-//        if(connect1.update_secure(config1, val_sample_tpm, val_sample_berat) != 200){
-//            buzz.buzzbeep(500);
-//            delay(2000);
-//        } else {
-//            delay(2500);
-//        }
-          connect1.update_secure();
-    }else{ //Cek bisa sim atau tidak
+    if (connect1.checkwifi())
+    {
+        if (connect1.reconnect() != -2)
+        {
+            connect1.sendWiFi(config1, val_sample_tpm, val_sample_berat);
+        }
+        else
+        {
+            Serial.println("MQTT broker error");
+            displed.print("SERVER    ERROR", 0, 0);
+            buzz.buzzbeep(1000);
+            delay(2000);
+            displed.print("Menyambungke server", 0, 0);
+            delay(2000);
+        }
+    }
+    else
+    { 
+        //Cek bisa sim atau tidak
         displed.print("WiFi tidaktersambung", 0, 0);
         delay(2000);
         displed.print("Kirim datavia SIM", 0, 0);
         Serial.println("KONEKSI SIM");
         vTaskDelay(1);
-        if (sim.connect_gprs(config1, val_sample_tpm, val_sample_berat) != 200){
+        if (sim.connect_gprs(config1, val_sample_tpm, val_sample_berat) != 200)
+        {
             displed.print("Kirim datagagal", 0, 0);
             buzz.buzzbeep(500);
             delay(500);
-        } else {
+        }
+        else
+        {
             delay(1000);
         }
     }
     //Cek kondisi baterai
-    if (bat.cek()){
+    if (bat.cek())
+    {
         displed.print("Battery   Low", 0, 0);
         buzz.buzzbeep(1000);
     }
     
     //Cek tombol pause ditekan atau tidak
-    while(pauseState == HIGH){
+    while(pauseState == HIGH)
+    {
         displed.print("  PAUSED", 0, 0);
-        if(pauseBeep == HIGH){
+        if(pauseBeep == HIGH)
+        {
             buzz.buzzbeep(500);
         }
-        if(pauseBeep == HIGH){
+        if(pauseBeep == HIGH)
+        {
             pauseBeep = LOW;
         }
-        if(button.is_push()){
+        if(button.is_push())
+        {
             delay(1000);
             detachInterrupt(configWiFiButton);
             pauseState = LOW;

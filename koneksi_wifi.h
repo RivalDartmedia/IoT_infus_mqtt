@@ -3,32 +3,34 @@
 
 #include "mem_set.h"
 #include "koneksi_cred.h"
+#include "display_led.h"
+#include "sensorinfus.h"
 
 #include <DNSServer.h>
 #include <WiFi.h>
 #include <AsyncTCP.h>
-#include "ESPAsyncWebServer.h"
-// #include <WiFiClientSecure.h>
-//#include <WiFiClient.h>
-//#include <HTTPClient.h>
-#include "display_led.h"
-#include "sensorinfus.h"
+#include <ESPAsyncWebServer.h>
 #include <esp_task_wdt.h>
 #include <PubSubClient.h>
+#include <ArduinoJson.h>
 
 Button button_wifi;
 DisplayLed displed_wifi;
 DNSServer dnsServer;
 AsyncWebServer server(80);
-String avail_wifi, port_ssid, port_name, port_pass, port_token;
-bool portal_on;
-int setting_state;
-int configWiFiButton = 19;
-//WiFiClient client;
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-bool isButtonPressed = false;
+String avail_wifi, port_ssid, port_pass;
+bool portal_on;
+int configWiFiButton = 19;
+
+void buttonpressed()
+{
+  esp_task_wdt_init(1, true);
+  esp_task_wdt_add(NULL);
+  ESP.restart();
+}
 
 String processor(const String &var)
 {
@@ -37,31 +39,6 @@ String processor(const String &var)
     return avail_wifi;
   }
   return String();
-}
-
-class CaptiveRequestHandler : public AsyncWebHandler
-{
-public:
-  CaptiveRequestHandler() {}
-  virtual ~CaptiveRequestHandler() {}
-
-  bool canHandle(AsyncWebServerRequest *request)
-  {
-    request->addInterestingHeader("Setting Infus");
-    return true;
-  }
-
-  void handleRequest(AsyncWebServerRequest *request)
-  {
-    request->send(LittleFS, "/edit_data.htm", String(), false, processor);
-  }
-};
-
-void buttonpressed()
-{
-  esp_task_wdt_init(1, true);
-  esp_task_wdt_add(NULL);
-  ESP.restart();
 }
 
 void checkavailnetwork()
@@ -156,150 +133,108 @@ bool start_portal(InfusConfig &config)
   return 0;
 }
 
+class CaptiveRequestHandler : public AsyncWebHandler
+{
+  public:
+    CaptiveRequestHandler() {}
+    virtual ~CaptiveRequestHandler() {}
+
+    bool canHandle(AsyncWebServerRequest *request)
+    {
+      request->addInterestingHeader("Setting Infus");
+      return true;
+    }
+
+    void handleRequest(AsyncWebServerRequest *request)
+    {
+      request->send(LittleFS, "/edit_data.htm", String(), false, processor);
+    }
+};
+
 class ConnectionWiFi
 {
-private:
-  String tokenid;
-  String infusid;
-  String send_message;
-//  HTTPClient http;
-  const char* mqttServer = "test.mosquitto.org"; // Alamat broker MQTT
-  const int mqttPort = 1883; // Port MQTT default
-  const char* mqttUsername = ""; // Username MQTT (jika ada)
-  const char* mqttPassword = ""; // Password MQTT (jika ada)
-  const char* topic = "rivaldm/test";
-  int number = 0;
+  private:
+    String tokenid;
+    String infusid;
+    String send_message;
+    const char* mqttServer = "192.168.1.23"; // Alamat broker MQTT
+    const int mqttPort = 1883; // Port MQTT default
+    const char* mqttUsername = ""; // Username MQTT (jika ada)
+    const char* mqttPassword = ""; // Password MQTT (jika ada)
+    const char* topic = "rivaldm/test";
 
-public:
-  bool checkwifi()
-  {
-    int limit_try = 20, cnt = 0;
-    while (WiFi.status() != WL_CONNECTED && cnt < limit_try)
+  public:
+    bool checkwifi()
     {
-      Serial.println("Connecting WiFi...");
-      cnt ++;
-      delay(250);
+      int limit_try = 20, cnt = 0;
+      while (WiFi.status() != WL_CONNECTED && cnt < limit_try)
+      {
+        Serial.println("Connecting WiFi...");
+        cnt ++;
+        delay(250);
+      }
+      // Check koneksi
+      if(cnt < limit_try){
+        return 1;
+      }
+      // Return 0 jika tidak bisa koneksi
+      return 0;
     }
-    // Check koneksi
-    if(cnt < limit_try){
-      return 1;
-    }
-    // Return 0 jika tidak bisa koneksi
-    return 0;
-  }
   
-  void connectWifi(InfusConfig &infusconfig)
-  {
-    displed_wifi.connectingWiFi(infusconfig.get(wifi_ssid_p).c_str());
-    WiFi.mode(WIFI_STA);
-    WiFi.begin(infusconfig.get(wifi_ssid_p).c_str(), infusconfig.get(wifi_pass_p).c_str());
-    delay(500);
-  }
-
-  void callback(char* topic, byte* payload, unsigned int length) {
-  // Menghandle pesan yang diterima
-  Serial.print("Message arrived on topic: ");
-  Serial.println(topic);
-  Serial.print("Message: ");
-  for (int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
-  }
-  Serial.println();
-}
-
-  void setupMqtt()
-  {
-    client.setServer(mqttServer, mqttPort);
-//    client.setCallback(*callback);
-  }
-
-void reconnect() {
-  // Loop sampai terhubung ke broker MQTT
-  while (!client.connected()) {
-    Serial.print("Attempting MQTT connection...");
-    // ID klien harus unik. Biasanya, Anda dapat menggunakan MAC address ESP32.
-    String clientId = "ESP32Client-";
-    clientId += String(random(0xffff), HEX);
-    if (client.connect(clientId.c_str(), mqttUsername, mqttPassword)) {
-      Serial.println("connected");
-      // Subscribe ke topik yang diperlukan
-      client.subscribe(topic);
-    } else {
-      Serial.print("failed, rc=");
-      Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
-      delay(5000);
+    void connectWifi(InfusConfig &infusconfig)
+    {
+      displed_wifi.connectingWiFi(infusconfig.get(wifi_ssid_p).c_str());
+      WiFi.mode(WIFI_STA);
+      WiFi.begin(infusconfig.get(wifi_ssid_p).c_str(), infusconfig.get(wifi_pass_p).c_str());
+      delay(500);
     }
-  }
-}
 
-void update_secure()
-{
-  if (!client.connected()) {
-    reconnect();
-  }
-  client.loop();
+    void setupMqtt()
+    {
+      client.setServer(mqttServer, mqttPort);
+    }
 
-  // Kirim pesan MQTT
-  number++;
-  String stringNumber = String(number);
-  String message = "Data ke-" + stringNumber;
-  Serial.println(message);
-  client.publish(topic, message.c_str());
-  delay(3000); // Kirim setiap 3 detik
-}
+    int reconnect()
+    {
+      Serial.print("Attempting MQTT connection...");
+      // ID klien harus unik. Biasanya, Anda dapat menggunakan MAC address ESP32.
+      String clientId = "ESP32Client-";
+      clientId += String(random(0xffff), HEX);
+      if (client.connect(clientId.c_str(), mqttUsername, mqttPassword))
+      {
+        Serial.println("connected");
+      }
+      else
+      {
+        Serial.print("failed, rc=");
+        Serial.print(client.state());
+        Serial.println(" try again in 5 seconds");
+      }
+      return client.state();
+    }
 
-//  int update_secure(InfusConfig &infusconfig, int tpm, int weigh)
-//  {
-//    Serial.println("Terhubung WiFi");
-//
-//    // WiFiClientSecure *client = new WiFiClientSecure;
-//    int httpCode;
-//
-//    tokenid = infusconfig.get(tokenID_p);
-//    infusid = infusconfig.get(infus_name_p);
-//    // client->setCACert(DEFAULT_ROOT_CA);
-//    {
-//      // Add a scoping block for HTTPClient https to make sure it is destroyed before WiFiClientSecure *client is
-//      HTTPClient https;
-//      // BLYNK:
-//      // send_message = server_dom + send_p + token + tokenid + berat_v + String(weigh) + tpm_v + String(tpm);
-//      // Callmebot :
-//      // send_message = server_dom_callmebot + send_p_callmebot + get_p_callmebot + token_callmebot + tokenid + "&text=" + "ID+Device+=+" + String(infusid) + ";+TPM+=+" + String(tpm) + "+;+Weigh+=+" + String(weigh);
-//      // API :
-//      send_message = URL + prefixRoute + path + "?token=" + token_api + "&deviceId=" + String(infusid) + "&tpm=" + String(tpm) + "&weight=" + String(weigh);
-//      Serial.println(send_message);
-//      if (https.begin(client, send_message))
-//      // if (https.begin(*client, send_message))
-//      { // HTTPS
-//        // start connection and send HTTP header
-//        httpCode = https.GET();
-//        Serial.println(httpCode);
-//
-//        // httpCode will be negative on error
-//        if (httpCode == 200)
-//        {
-//          // HTTP header has been send and Server response header has been handled
-//          Serial.printf("[HTTPS] GET... code: %d\n", httpCode);
-//          // file found at server
-//          if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY)
-//          {
-//            String payload = https.getString();
-//            Serial.println(payload);
-//            displed_wifi.print("Kirim databerhasil", 0, 0);
-//          }
-//        }
-//        else
-//        {
-//          Serial.printf("[HTTPS] GET... failed, error: %s\n", https.errorToString(httpCode).c_str());
-//          displed_wifi.print("Kirim datagagal", 0, 0);
-//        }
-//
-//        https.end();
-//      }
-//    }
-//  return httpCode;
-//  }
+    void sendWiFi(InfusConfig &infusconfig, int tpm, int weigh)
+    {
+      if (!client.connected())
+      {
+        reconnect();
+      }
+      client.loop();
+
+      // Kirim pesan MQTT
+      infusid = infusconfig.get(infus_name_p);
+      StaticJsonDocument<200> doc;
+      doc["ID_Infus"] = infusid;
+      doc["TPM"] = tpm;
+      doc["Weight"] = weigh;
+
+      String message;
+      serializeJsonPretty(doc, message);
+
+      Serial.println(message);
+      client.publish(topic, message.c_str());
+      delay(3000);
+    }
 };
 
 #endif // !1
