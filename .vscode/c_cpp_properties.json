@@ -1,22 +1,48 @@
 {
+    "version": 4,
     "configurations": [
         {
             "name": "Win32",
+            "compilerPath": "C:\\msys64\\mingw64\\bin\\gcc.exe",
+            "compilerArgs": [],
+            "intelliSenseMode": "windows-gcc-x64",
             "includePath": [
                 "${workspaceFolder}/**"
             ],
+            "forcedInclude": [],
+            "cStandard": "c17",
+            "cppStandard": "gnu++17",
             "defines": [
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE"
-            ],
-            "compilerPath": "C:\\msys64\\mingw64\\bin\\gcc.exe",
-            "cStandard": "c17",
-            "cppStandard": "gnu++17",
-            "intelliSenseMode": "windows-gcc-x64"
+            ]
         },
         {
             "name": "Arduino",
+            "compilerPath": "C:\\Users\\LENOVO\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\xtensa-esp32-elf-gcc\\esp-2021r2-patch5-8.4.0\\bin\\xtensa-esp32-elf-g++",
+            "compilerArgs": [
+                "-mlongcalls",
+                "-Wno-frame-address",
+                "-ffunction-sections",
+                "-fdata-sections",
+                "-Wno-error=unused-function",
+                "-Wno-error=unused-variable",
+                "-Wno-error=deprecated-declarations",
+                "-Wno-unused-parameter",
+                "-Wno-sign-compare",
+                "-freorder-blocks",
+                "-Wwrite-strings",
+                "-fstack-protector",
+                "-fstrict-volatile-bitfields",
+                "-Wno-error=unused-but-set-variable",
+                "-fno-jump-tables",
+                "-fno-tree-switch-conversion",
+                "-std=gnu++11",
+                "-fexceptions",
+                "-fno-rtti"
+            ],
+            "intelliSenseMode": "gcc-x64",
             "includePath": [
                 "C:\\Users\\LENOVO\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.10\\tools\\sdk\\esp32\\include\\newlib\\platform_include",
                 "C:\\Users\\LENOVO\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.10\\tools\\sdk\\esp32\\include\\freertos\\include",
@@ -212,21 +238,22 @@
                 "C:\\Users\\LENOVO\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.10\\libraries\\LittleFS\\src",
                 "C:\\Users\\LENOVO\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.10\\libraries\\FS\\src",
                 "C:\\Users\\LENOVO\\Documents\\Arduino\\libraries\\HX711",
-                "C:\\Users\\LENOVO\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.10\\libraries\\DNSServer\\src",
-                "C:\\Users\\LENOVO\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.10\\libraries\\WiFi\\src",
-                "C:\\Users\\LENOVO\\Documents\\Arduino\\libraries\\AsyncTCP\\src",
-                "C:\\Users\\LENOVO\\Documents\\Arduino\\libraries\\ESPAsyncWebServer-master\\src",
-                "C:\\Users\\LENOVO\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.10\\libraries\\HTTPClient\\src",
-                "C:\\Users\\LENOVO\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.10\\libraries\\WiFiClientSecure\\src",
                 "C:\\Users\\LENOVO\\Documents\\Arduino\\libraries\\Adafruit_SSD1306",
                 "C:\\Users\\LENOVO\\Documents\\Arduino\\libraries\\Adafruit_GFX_Library",
                 "C:\\Users\\LENOVO\\Documents\\Arduino\\libraries\\Adafruit_BusIO",
                 "C:\\Users\\LENOVO\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.10\\libraries\\Wire\\src",
                 "C:\\Users\\LENOVO\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.10\\libraries\\SPI\\src",
+                "C:\\Users\\LENOVO\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.10\\libraries\\DNSServer\\src",
+                "C:\\Users\\LENOVO\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.10\\libraries\\WiFi\\src",
+                "C:\\Users\\LENOVO\\Documents\\Arduino\\libraries\\AsyncTCP\\src",
+                "C:\\Users\\LENOVO\\Documents\\Arduino\\libraries\\ESPAsyncWebServer-master\\src",
+                "C:\\Users\\LENOVO\\Documents\\Arduino\\libraries\\pubsubclient-master\\src",
                 "C:\\Users\\LENOVO\\Documents\\Arduino\\libraries\\EspSoftwareSerial\\src",
                 "C:\\Users\\LENOVO\\Documents\\Arduino\\libraries\\SIM800L_HTTP_connector\\src",
                 "C:\\Users\\LENOVO\\Documents\\Arduino\\libraries\\OTAdrive_ESP\\src",
                 "C:\\Users\\LENOVO\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.10\\libraries\\HTTPUpdate\\src",
+                "C:\\Users\\LENOVO\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.10\\libraries\\HTTPClient\\src",
+                "C:\\Users\\LENOVO\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.10\\libraries\\WiFiClientSecure\\src",
                 "C:\\Users\\LENOVO\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.10\\libraries\\Update\\src",
                 "C:\\Users\\LENOVO\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.10\\libraries\\SPIFFS\\src",
                 "c:\\users\\lenovo\\appdata\\local\\arduino15\\packages\\esp32\\tools\\xtensa-esp32-elf-gcc\\esp-2021r2-patch5-8.4.0\\xtensa-esp32-elf\\include\\c++\\8.4.0",
@@ -235,9 +262,13 @@
                 "c:\\users\\lenovo\\appdata\\local\\arduino15\\packages\\esp32\\tools\\xtensa-esp32-elf-gcc\\esp-2021r2-patch5-8.4.0\\lib\\gcc\\xtensa-esp32-elf\\8.4.0\\include",
                 "c:\\users\\lenovo\\appdata\\local\\arduino15\\packages\\esp32\\tools\\xtensa-esp32-elf-gcc\\esp-2021r2-patch5-8.4.0\\lib\\gcc\\xtensa-esp32-elf\\8.4.0\\include-fixed",
                 "c:\\users\\lenovo\\appdata\\local\\arduino15\\packages\\esp32\\tools\\xtensa-esp32-elf-gcc\\esp-2021r2-patch5-8.4.0\\xtensa-esp32-elf\\sys-include",
-                "c:\\users\\lenovo\\appdata\\local\\arduino15\\packages\\esp32\\tools\\xtensa-esp32-elf-gcc\\esp-2021r2-patch5-8.4.0\\xtensa-esp32-elf\\include",
-                "C:\\Users\\LENOVO\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.10\\tools\\sdk\\esp32\\include\\mqtt\\esp-mqtt\\include"
+                "c:\\users\\lenovo\\appdata\\local\\arduino15\\packages\\esp32\\tools\\xtensa-esp32-elf-gcc\\esp-2021r2-patch5-8.4.0\\xtensa-esp32-elf\\include"
             ],
+            "forcedInclude": [
+                "C:\\Users\\LENOVO\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.10\\cores\\esp32\\Arduino.h"
+            ],
+            "cStandard": "c11",
+            "cppStandard": "c++11",
             "defines": [
                 "HAVE_CONFIG_H",
                 "MBEDTLS_CONFIG_FILE=\"mbedtls/esp_config.h\"",
@@ -583,12 +614,7 @@
                 "__ATOMIC_ACQ_REL=4",
                 "__ATOMIC_RELEASE=3",
                 "USBCON"
-            ],
-            "compilerPath": "C:\\Users\\LENOVO\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\xtensa-esp32-elf-gcc\\esp-2021r2-patch5-8.4.0\\bin\\xtensa-esp32-elf-g++",
-            "cStandard": "c11",
-            "cppStandard": "c++11",
-            "intelliSenseMode": "gcc-x64"
+            ]
         }
-    ],
-    "version": 4
+    ]
 }

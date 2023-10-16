@@ -3,6 +3,5 @@
     "board": "esp32:esp32:esp32",
     "programmer": "esptool",
     "sketch": "IoT_infus_mqtt.ino",
-    "port": "COM4",
-    "output": "./output"
+    "port": "COM4"
 }
